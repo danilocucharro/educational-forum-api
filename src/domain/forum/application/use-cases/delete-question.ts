@@ -9,7 +9,7 @@ type DeleteQuestionUseCaseResponse = {}
 
 export class DeleteQuestionUseCase {
   constructor(
-    private questionsRepository: QuestionsRepository
+    private QuestionsRepository: QuestionsRepository
   ) {}
 
   async execute({
@@ -17,17 +17,17 @@ export class DeleteQuestionUseCase {
     questionId
   }: DeleteQuestionUseCaseRequest): Promise<DeleteQuestionUseCaseResponse> {
 
-    const question = await this.questionsRepository.findById(questionId)
+    const Question = await this.QuestionsRepository.findById(questionId)
 
-    if (!question) {
+    if (!Question) {
       throw new Error('Question not found.')
     }
 
-    if (authorId !== question.authorId.toString()) {
+    if (authorId !== Question.authorId.toString()) {
       throw new Error('Not Allowed.')
     }
 
-    await this.questionsRepository.delete(question)
+    await this.QuestionsRepository.delete(Question)
     return {}
   }
 }

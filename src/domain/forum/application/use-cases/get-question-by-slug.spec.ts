@@ -1,5 +1,4 @@
 import { expect, describe, it, beforeEach } from "vitest"
-import { CreateQuestionUseCase } from "./create-question.js";
 import { InMemoryQuestionsRepository } from "../../../../../test/repositories/in-memory-questions-repository.js";
 import { GetQuestionbySlugUseCase } from "./get-question-by-slug.js";
 import { makeQuestion } from "../../../../../test/factory/make-question.js";
