@@ -4,7 +4,7 @@ import { Entity } from "../../../../core/entities/entity.js"
 import { Slug } from "./value-objects/slug.js"
 import dayjs from "dayjs"
 
-interface QuestionProps {
+export interface QuestionProps {
   authorId: UniqueEntityId
   bestAnswerId: UniqueEntityId | undefined
   title: string
