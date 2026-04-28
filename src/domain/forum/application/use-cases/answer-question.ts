@@ -3,10 +3,14 @@ import type { AnswersRepository } from "../repositories/answers-repository.js"
 import { Answer } from "../../enterprise/entities/answer.js"
 
 
-interface AnswerQuestionUseCaseInterface {
+interface AnswerQuestionUseCaseRequest {
   instructorId: string
   questionId: string
   content: string
+}
+
+interface AnswerQuestionUseCaseResponse {
+  answer: Answer
 }
 
 export class AnswerQuestionUseCase {
@@ -14,7 +18,10 @@ export class AnswerQuestionUseCase {
     private answersRepository: AnswersRepository
   ) {}
 
-  async execute({ instructorId, questionId, content }: AnswerQuestionUseCaseInterface) {
+  async execute({
+    instructorId,
+    questionId,
+    content }: AnswerQuestionUseCaseRequest): Promise<AnswerQuestionUseCaseResponse> {
     const answer = Answer.create({
       content,
       authorId: new UniqueEntityId(instructorId),
@@ -23,6 +30,6 @@ export class AnswerQuestionUseCase {
 
     await this.answersRepository.create(answer)
 
-    return answer
+    return {answer}
   }
 }
