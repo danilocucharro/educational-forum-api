@@ -1,4 +1,4 @@
-import type { QuestionsRepository } from "../../src/domain/forum/application/repositories/question-repository.js";
+import type { QuestionsRepository } from "../../src/domain/forum/application/repositories/questions-repository.js";
 import type { Question } from "../../src/domain/forum/enterprise/entities/question.js";
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
@@ -28,6 +28,12 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === question.id)
 
     this.items.splice(itemIndex, 1)
+  }
+
+  async save(question: Question) {
+    const itemIndex = this.items.findIndex((item) => item.id === question.id)
+
+    this.items[itemIndex] = question
   }
 
   async create(question: Question) {

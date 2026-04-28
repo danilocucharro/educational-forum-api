@@ -1,21 +1,25 @@
 import type { QuestionsRepository } from "../repositories/questions-repository.js"
 
-interface DeleteQuestionUseCaseRequest {
+interface EditQuestionUseCaseRequest {
   authorId: string
   questionId: string
+  title: string
+  content: string
 }
 
-type DeleteQuestionUseCaseResponse = {}
+type EditQuestionUseCaseResponse = {}
 
-export class DeleteQuestionUseCase {
+export class EditQuestionUseCase {
   constructor(
     private questionsRepository: QuestionsRepository
   ) {}
 
   async execute({
     authorId,
-    questionId
-  }: DeleteQuestionUseCaseRequest): Promise<DeleteQuestionUseCaseResponse> {
+    questionId,
+    content,
+    title
+  }: EditQuestionUseCaseRequest): Promise<EditQuestionUseCaseResponse> {
 
     const question = await this.questionsRepository.findById(questionId)
 
@@ -27,7 +31,11 @@ export class DeleteQuestionUseCase {
       throw new Error('Not Allowed.')
     }
 
-    await this.questionsRepository.delete(question)
+    question.title = title
+    question.content = content
+
+    await this.questionsRepository.save(question)
+
     return {}
   }
 }
