@@ -1,0 +1,46 @@
+import { expect, describe, it, beforeEach } from "vitest"
+import { InMemoryAnswersRepository } from "../../../../../test/repositories/in-memory-answers-repository.js";
+import { makeAnswer } from "../../../../../test/factory/make-answer.js";
+import { EditAnswerUseCase } from "./edit-answer.js";
+import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
+
+let inMemoryAnswersRepository: InMemoryAnswersRepository
+let sut: EditAnswerUseCase // System under test
+
+describe('Edit Answer By ID', () => {
+  beforeEach(() => {
+    inMemoryAnswersRepository = new InMemoryAnswersRepository()
+    sut = new EditAnswerUseCase(inMemoryAnswersRepository)
+  })
+
+  it('should be able to edit an answer by an ID', async () => {
+    const newAnswer = makeAnswer({
+      authorId: new UniqueEntityId('author-1')
+    }, new UniqueEntityId('answer-1'))
+    await inMemoryAnswersRepository.create(newAnswer)
+
+    await sut.execute({
+      authorId: 'author-1',
+      content: 'new answer content',
+      answerId: 'answer-1'
+    })
+
+    expect(inMemoryAnswersRepository.items[0]?.content).toEqual('new answer content')
+  })
+
+  it('should NOT be able to edit an answer', async () => {
+    const newAnswer = makeAnswer({
+      authorId: new UniqueEntityId('author-1')
+    }, new UniqueEntityId('answer-1'))
+    await inMemoryAnswersRepository.create(newAnswer)
+
+    expect(() => {
+      return sut.execute({
+        authorId: 'author-2',
+        content: 'new question content',
+        answerId: 'answer-1'
+      })
+    })
+    .rejects.toBeInstanceOf(Error)
+  })
+})
