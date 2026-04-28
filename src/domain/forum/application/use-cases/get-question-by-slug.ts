@@ -1,5 +1,5 @@
 import { Question } from "../../enterprise/entities/question.js"
-import type { QuestionsRepository } from "../repositories/question-repository.js"
+import type { QuestionsRepository } from "../repositories/questions-repository.js"
 
 interface GetQuestionbySlugUseCaseRequest {
   slug: string
