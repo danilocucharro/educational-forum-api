@@ -3,6 +3,7 @@ import { InMemoryAnswersRepository } from "../../../../../test/repositories/in-m
 import { makeAnswer } from "../../../../../test/factory/make-answer.js";
 import { EditAnswerUseCase } from "./edit-answer.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
+import { NotAllowedError } from "./errors/not-allowed-error.js";
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository
 let sut: EditAnswerUseCase // System under test
@@ -34,13 +35,13 @@ describe('Edit Answer By ID', () => {
     }, new UniqueEntityId('answer-1'))
     await inMemoryAnswersRepository.create(newAnswer)
 
-    expect(() => {
-      return sut.execute({
-        authorId: 'author-2',
-        content: 'new question content',
-        answerId: 'answer-1'
-      })
+    const result = await sut.execute({
+      authorId: 'author-2',
+      content: 'new question content',
+      answerId: 'answer-1'
     })
-    .rejects.toBeInstanceOf(Error)
+
+    expect(result.isLeft()).toBe(true);
+		expect(result.value).toBeInstanceOf(NotAllowedError);
   })
 })

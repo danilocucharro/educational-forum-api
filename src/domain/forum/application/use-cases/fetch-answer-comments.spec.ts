@@ -24,9 +24,9 @@ describe("Fetch Answer Comments", () => {
       answerId: new UniqueEntityId("question-1")
     }))
 
-    const { answerComments } = await sut.execute({ answerId: 'question-1', page: 1 })
+    const { value } = await sut.execute({ answerId: 'question-1', page: 1 })
 
-    expect(answerComments).toHaveLength(3)
+    expect(value?.answerComments).toHaveLength(3)
   });
 
   it("should be able to fetch paginated question comments", async () => {
@@ -34,8 +34,8 @@ describe("Fetch Answer Comments", () => {
       await inMemoryAnswerCommentsRepository.create(makeAnswerComment({ answerId: new UniqueEntityId("question-1")}))
     }
 
-    const { answerComments } = await sut.execute({answerId: 'question-1', page: 2 })
+    const { value } = await sut.execute({answerId: 'question-1', page: 2 })
 
-    expect(answerComments).toHaveLength(2)
+    expect(value?.answerComments).toHaveLength(2)
 	});
 })

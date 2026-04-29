@@ -1,5 +1,8 @@
+import { left, right, type Either } from "../../../../core/either.js"
 import type { Question } from "../../enterprise/entities/question.js"
 import type { QuestionsRepository } from "../repositories/questions-repository.js"
+import { NotAllowedError } from "./errors/not-allowed-error.js"
+import { ResourceNotFoundError } from "./errors/resource-not-found-error.js"
 
 interface EditQuestionUseCaseRequest {
   authorId: string
@@ -8,9 +11,10 @@ interface EditQuestionUseCaseRequest {
   content: string
 }
 
-interface EditQuestionUseCaseResponse {
-  question: Question
-}
+type EditQuestionUseCaseResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  { question: Question }
+>
 
 export class EditQuestionUseCase {
   constructor(
@@ -27,11 +31,12 @@ export class EditQuestionUseCase {
     const question = await this.questionsRepository.findById(questionId)
 
     if (!question) {
-      throw new Error('Question not found.')
+      return left(new ResourceNotFoundError())
     }
 
     if (authorId !== question.authorId.toString()) {
-      throw new Error('Not Allowed.')
+      return left(new NotAllowedError())
+
     }
 
     question.title = title
@@ -39,8 +44,6 @@ export class EditQuestionUseCase {
 
     await this.questionsRepository.save(question)
 
-    return {
-      question,
-    }
+    return right({ question })
   }
 }
