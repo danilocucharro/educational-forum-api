@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryQuestionCommentsRepository } from "../../../../../test/repositories/in-memory-question-comments-repository.js";
-import { makeQuestion } from "../../../../../test/factory/make-question.js";
 import { DeleteQuestionCommentUseCase } from "./delete-question-comment.js";
 import { makeQuestionComment } from "../../../../../test/factory/make-question-comment.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
