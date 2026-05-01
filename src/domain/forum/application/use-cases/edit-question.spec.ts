@@ -4,14 +4,18 @@ import { makeQuestion } from "../../../../../test/factory/make-question.js";
 import { EditQuestionUseCase } from "./edit-question.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
 import { NotAllowedError } from "./errors/not-allowed-error.js";
+import { InMemoryQuestionAttachmentsRepository } from "../../../../../test/repositories/in-memory-question-attachments-repository.js";
+import { makeQuestionAttachment } from "../../../../../test/factory/make-quesiton-attachment.js";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let sut: EditQuestionUseCase // System under test
 
 describe('Edit Question By ID', () => {
   beforeEach(() => {
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
-    sut = new EditQuestionUseCase(inMemoryQuestionsRepository)
+    inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+    sut = new EditQuestionUseCase(inMemoryQuestionsRepository, inMemoryQuestionAttachmentsRepository)
   })
 
   it('should be able to edit a question by an ID', async () => {
@@ -20,16 +24,34 @@ describe('Edit Question By ID', () => {
     }, new UniqueEntityId('question-1'))
     await inMemoryQuestionsRepository.create(newQuestion)
 
+    inMemoryQuestionAttachmentsRepository.items.push(
+          makeQuestionAttachment({
+            questionId: newQuestion.id,
+            attachmentId: new UniqueEntityId('1'),
+          }),
+          makeQuestionAttachment({
+            questionId: newQuestion.id,
+            attachmentId: new UniqueEntityId('2'),
+          }),
+        )
+
     await sut.execute({
       authorId: 'author-1',
       content: 'new question content',
       title: 'new question title',
-      questionId: newQuestion.id.toString()
+      questionId: newQuestion.id.toString(),
+      attachmentsIds: ['1', '3']
     })
 
-    expect(inMemoryQuestionsRepository.items[0]?.content).toEqual('new question content')
-    expect(inMemoryQuestionsRepository.items[0]?.title).toEqual('new question title')
-    expect(inMemoryQuestionsRepository.items[0]?.slug.value).toEqual('new-question-title')
+    expect(
+          inMemoryQuestionsRepository.items[0]?.attachments.currentItems
+        ).toHaveLength(2)
+        expect(
+          inMemoryQuestionsRepository.items[0]?.attachments.currentItems,
+        ).toEqual([
+          expect.objectContaining({ attachmentId: new UniqueEntityId('1') }),
+          expect.objectContaining({ attachmentId: new UniqueEntityId('3') }),
+        ])
 
   })
 
