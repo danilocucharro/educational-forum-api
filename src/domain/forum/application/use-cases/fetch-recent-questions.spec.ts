@@ -3,13 +3,17 @@ import { InMemoryQuestionsRepository } from "../../../../../test/repositories/in
 import { FetchRecentQuestionsUseCase } from "./fetch-recent-questions.js";
 import { makeQuestion } from "../../../../../test/factory/make-question.js";
 import { Slug } from "../../enterprise/entities/value-objects/slug.js";
+import { InMemoryQuestionAttachmentsRepository } from "../../../../../test/repositories/in-memory-question-attachments-repository.js";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
+
 let sut: FetchRecentQuestionsUseCase // System under test
 
 describe("Fetch Recent Questions By Slug", () => {
-	beforeEach(() => {
-		inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+  beforeEach(() => {
+    inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+		inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository);
 		sut = new FetchRecentQuestionsUseCase(inMemoryQuestionsRepository);
 	});
 

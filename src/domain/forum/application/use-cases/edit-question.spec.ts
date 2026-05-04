@@ -4,8 +4,8 @@ import { makeQuestion } from "../../../../../test/factory/make-question.js";
 import { EditQuestionUseCase } from "./edit-question.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
 import { NotAllowedError } from "./errors/not-allowed-error.js";
+import { makeQuestionAttachment } from "../../../../../test/factory/make-question-attachment.js";
 import { InMemoryQuestionAttachmentsRepository } from "../../../../../test/repositories/in-memory-question-attachments-repository.js";
-import { makeQuestionAttachment } from "../../../../../test/factory/make-quesiton-attachment.js";
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
@@ -13,8 +13,8 @@ let sut: EditQuestionUseCase // System under test
 
 describe('Edit Question By ID', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
     inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository)
     sut = new EditQuestionUseCase(inMemoryQuestionsRepository, inMemoryQuestionAttachmentsRepository)
   })
 
@@ -66,6 +66,7 @@ describe('Edit Question By ID', () => {
       questionId: newQuestion.id.toString(),
       content: 'new question content',
       title: 'new question title',
+      attachmentsIds: []
     })
 
     expect(result.isLeft()).toBe(true);

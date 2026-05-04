@@ -6,14 +6,17 @@ import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
 import { InMemoryQuestionsRepository } from "../../../../../test/repositories/in-memory-questions-repository.js";
 import { makeQuestion } from "../../../../../test/factory/make-question.js";
 import { NotAllowedError } from "./errors/not-allowed-error.js";
+import { InMemoryQuestionAttachmentsRepository } from "../../../../../test/repositories/in-memory-question-attachments-repository.js";
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let sut: ChooseQuestionBestAnswerUseCase // System under test
 
 describe('Delete Answer By ID', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository)
     inMemoryAnswersRepository = new InMemoryAnswersRepository()
     sut = new ChooseQuestionBestAnswerUseCase(
       inMemoryQuestionsRepository,

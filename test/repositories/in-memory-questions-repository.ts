@@ -1,9 +1,12 @@
 import type { PaginationParams } from "../../src/core/repositories/pagination-params.js";
+import type { QuestionAttachmentsRepository } from "../../src/domain/forum/application/repositories/question-attachments-repository.js";
 import type { QuestionsRepository } from "../../src/domain/forum/application/repositories/questions-repository.js";
 import type { Question } from "../../src/domain/forum/enterprise/entities/question.js";
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   public items: Question[] = []
+
+  constructor(private questionAttachmentsRepository: QuestionAttachmentsRepository) {}
 
   async findBySlug(slug: string){
     const question = this.items.find((item) => item.slug.value === slug)
@@ -37,6 +40,8 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === question.id)
 
     this.items.splice(itemIndex, 1)
+
+    this.questionAttachmentsRepository.deleteManyByQuestionId(question.id.toString())
   }
 
   async save(question: Question) {
