@@ -3,7 +3,7 @@ import { InMemoryAnswersRepository } from "../../../../../test/repositories/in-m
 import { makeAnswer } from "../../../../../test/factory/make-answer.js";
 import { EditAnswerUseCase } from "./edit-answer.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
-import { NotAllowedError } from "./errors/not-allowed-error.js";
+import { NotAllowedError } from "../../../../core/errors/errors/not-allowed-error.js";
 import { InMemoryAnswerAttachmentsRepository } from "../../../../../test/repositories/in-memory-answer-attachments-repository.js";
 import { makeAnswerAttachment } from "../../../../../test/factory/make-answer-attachment.js";
 
