@@ -4,13 +4,17 @@ import { makeAnswer } from "../../../../../test/factory/make-answer.js";
 import { DeleteAnswerUseCase } from "./delete-answer.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
 import { NotAllowedError } from "./errors/not-allowed-error.js";
+import { makeAnswerAttachment } from "../../../../../test/factory/make-answer-attachment.js";
+import { InMemoryAnswerAttachmentsRepository } from "../../../../../test/repositories/in-memory-answer-attachments-repository.js";
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let sut: DeleteAnswerUseCase // System under test
 
 describe("Delete Answer By ID", () => {
-	beforeEach(() => {
-		inMemoryAnswersRepository = new InMemoryAnswersRepository();
+  beforeEach(() => {
+    inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
+		inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository);
 		sut = new DeleteAnswerUseCase(inMemoryAnswersRepository);
 	});
 
@@ -21,7 +25,18 @@ describe("Delete Answer By ID", () => {
 			},
 			new UniqueEntityId("question-1"),
 		);
-		await inMemoryAnswersRepository.create(newAnswer);
+    await inMemoryAnswersRepository.create(newAnswer);
+
+    inMemoryAnswerAttachmentsRepository.items.push(
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityId('1')
+      }),
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityId('2')
+      })
+    )
 
 		await sut.execute({ authorId: "author-1", answerId: "question-1" });
 
