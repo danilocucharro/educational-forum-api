@@ -1,7 +1,5 @@
 import { expect, describe, it, beforeEach } from "vitest"
 import { AnswerQuestionUseCase } from "./answer-question.js"
-import type { AnswersRepository } from "../repositories/answers-repository.js";
-import type { Answer } from "../../enterprise/entities/answer.js";
 import { InMemoryAnswersRepository } from "../../../../../test/repositories/in-memory-answers-repository.js";
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js";
 import { InMemoryAnswerAttachmentsRepository } from "../../../../../test/repositories/in-memory-answer-attachments-repository.js";

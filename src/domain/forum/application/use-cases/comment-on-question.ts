@@ -1,7 +1,6 @@
 import { left, right, type Either } from "../../../../core/either.js"
 import { UniqueEntityId } from "../../../../core/entities/unique-entity-id.js"
 import { QuestionComment } from "../../enterprise/entities/question-comment.js"
-import { Question } from "../../enterprise/entities/question.js"
 import type { QuestionCommentsRepository } from "../repositories/question-comments-repository.js"
 import type { QuestionsRepository } from "../repositories/questions-repository.js"
 import { ResourceNotFoundError } from "./errors/resource-not-found-error.js"

@@ -1,5 +1,5 @@
 import { left, right, type Either } from "../../../../core/either.js"
-import { Question } from "../../enterprise/entities/question.js"
+import type { Question } from "../../enterprise/entities/question.js"
 import type { QuestionsRepository } from "../repositories/questions-repository.js"
 import { ResourceNotFoundError } from "./errors/resource-not-found-error.js"
 
