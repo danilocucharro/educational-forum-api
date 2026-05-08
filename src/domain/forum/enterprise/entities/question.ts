@@ -3,7 +3,6 @@ import type { Optional } from "../../../../core/types/optional.js"
 import { Slug } from "./value-objects/slug.js"
 import dayjs from "dayjs"
 import { AggregateRoot } from "../../../../core/entities/aggregate-root.js"
-import type { QuestionAttachment } from "./question-attachment.js"
 import { QuestionAttachmentList } from "./question-attachment-list.js"
 
 export interface QuestionProps {
