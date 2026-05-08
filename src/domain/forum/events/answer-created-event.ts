@@ -4,7 +4,7 @@ import type { Answer } from "../enterprise/entities/answer.js";
 
 export class AnswerCreatedEvent implements DomainEvent {
   public ocurredAt: Date;
-  public answer
+  public answer: Answer
 
   constructor(answer: Answer) {
     this.ocurredAt = new Date()
